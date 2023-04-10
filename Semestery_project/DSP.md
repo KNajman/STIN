@@ -4,9 +4,8 @@
 
 ### 1. Úvod
 
-Jedná se o jednoduchý bankovní systém se základními fukncemi. Funkce jsou popsány v kapitole 2. Systém bude realizován jako webová aplikace aby byl dostupný z jakéhokoliv zařízení s přístupem do internetu. Z toho vyplívá rozdělená na frontend a backend. Frontend bude realizován pomocí HTML, CSS a JavaScriptu. Backend bude realizován pomocí Pythonu a Flasku.
+Cílem semestrální práce je vytvořit bankovní systém, který bude umožňovat uživatelům vytvářet a spravovat účty, provádět platby a převody mezi účty. Systém má být realizován tak, aby byl dostupný z jakéhokoliv zařízení s přístupem na internet. Z toho vyplývá rozdělení na frontend a backend. Frontend bude realizován pomocí HTML, CSS a JavaScriptu. Backend bude realizován pomocí Pythonu a Flasku.
 
-Semestrální práce STIN:
 
 DSP
 	- blokově: “částka: všechno se se s ni provádí”
@@ -29,7 +28,7 @@ Zadání:
 	- backend někde běží + frontend (UI) a jejich komunikace 
 	- může být webowka
 
-## Bodové zadání
+## Bodové zadání:
 1. Bankovní informační systém
 2. základní stavební bloky
    1. účet (číslo, měna)
@@ -84,10 +83,14 @@ Zadání:
 4. Uživatel je přesměrován na stránku s účtem
    
 ### 3.3. Práce s účtem
-| Požadavek číslo | Popis požadavku |
-| --- | --- |
-| 1 | Vložení peněžních prostředků na účet v zadané měně |
-| 2 | Vybrání peněžních prostředků z účtu v zadané měně |
-| 3 | Převod peněžních prostředků na jiný účet s možností konverze měny |
-| 4 | Konverze měny |
-| 5 | Platba u obchodníka |
+| Požadavek číslo | Popis požadavku                                                   |
+| --------------- | ----------------------------------------------------------------- |
+| 1               | Vložení peněžních prostředků na účet v zadané měně                |
+| 2               | Vybrání peněžních prostředků z účtu v zadané měně                 |
+| 3               | Převod peněžních prostředků na jiný účet s možností konverze měny |
+| 4               | Konverze měny                                                     |
+| 5               | Platba u obchodníka                                               |
+
+### 3.3.1. Připsání peněžních prostředků na účet v zadané měně
+
+Účet []
