@@ -2,12 +2,12 @@
 
 ## Projekt: Bankovní systém
 
-### 1. Úvod
+###  Úvod
 
 Cílem semestrální práce je vytvořit bankovní systém, který umožní uživateli vytvářet a spravovat účty, provádět platby a převody mezi účty. 
 Systém má být realizován tak, aby byl dostupný z jakéhokoliv zařízení s přístupem na internet.
 
-### 1.1 Zadání projektu z přednášky
+### Zadání projektu z přednášky
 DSP - dokument specifikace požadavků, v něm je požadován návrh systému, který bude realizován. Je nutné, specifikovat jak a co bude realizováno, a s jakými prostředky. V DSP by se měl nacházet následující obsah:
 - blokové UML schéma čásky a operace které se s ní provádí
 - system pro bank. Obyčejný informační systém
@@ -27,7 +27,7 @@ DSP - dokument specifikace požadavků, v něm je požadován návrh systému, k
 - backend někde běží + frontend (UI) a jejich komunikace 
 - ideální implementací je webová stránka
 
-### 1.2 Bodové zadání:
+### Bodové zadání:
 1. Bankovní informační systém
 2. základní stavební bloky
    1. účet (číslo, měna)
@@ -55,50 +55,89 @@ DSP - dokument specifikace požadavků, v něm je požadován návrh systému, k
    4. pokrytí kódy testy na 70%, získané z CI/CD, tedy na přímo v IDE
    5. ukázka je aplikace funguje
 
--------
+
+---
+
+# Návrh řešení
+## Architektura systému
+
+Bankovní systém bude realizován jako webová aplikace, která bude sestávat z backendu a frontendu. Backend bude napsán v programovacím jazyce Python a bude využívat webový framework Flask. Frontend bude napsán v HTML, stylizace v CSS a komunikaci a scriptování v JavaScriptu s možným využítím knihovny React. Pro komunikaci mezi backendem a frontendem bude využit protokol WSGI. Pro spuštění backendu bude využit kontejner Docker a nasezení na server bude realizováno pomocí CI/CD. Backenb poběží na službě Render.com
+
+## Databáze
+
+**User**
+
+Entita User bude reprezentovat uživatele bankovního systému a bude obsahovat následující atributy:
+
+- id: integer
+- name: string
+- email: string
+- PIN: string
 
 
-## množina všech požadavků
+**Account**
 
-<!-- tabulka -->
+Entita Account bude reprezentovat bankovní účet a bude obsahovat následující atributy:
 
-## 2. Realizace
-### 2.1. Technologie
-- Frontend
-	- HTML
-	- CSS
-	- JavaScript
-- Backend
-	- Python
-	- Flask
-	- Docker
-	- WSGI
+- id: integer
+- user_id: integer (cizí klíč na entitu User)
+- currency: string
+- balance: float
 
-## 3. Funkcionality
- - Registrace uživatele
- - Přihlášení uživatele
- - Práce s účtem viz. tabulka 1
- - Odhlášení uživatele
+**Transaction**
 
-## 4. Use cases (scénáře použití)
+Entita Transaction bude reprezentovat bankovní transakci a bude obsahovat následující atributy:
 
-### 4.1. UML diagram
+- id: integer
+- sender_account_id: integer (cizí klíč na entitu Account)
+- receiver_account_id: integer (cizí klíč na entitu Account)
+- amount: float
+- currency: string
+- date: datetime
+
+# Popis funkcí
+##  Funkční požadavky
+1. Uživatel může vytvořit nový účet a vložit na něj peníze.
+2. Uživatel může provádět platby a převody mezi účty.
+3. Uživatel může vidět historii operací na svých účtech.
+4. Do systém musí přihlašovat pomocí dvoufázového ověření.
+5. Uživatel musí mít možnost zobrazit své zůstatky na jednotlivých účtech a v jednotlivých měnách.
+6. Systém musí být schopen vyčítat aktuální kurz měn pomocí dat z České národní banky.
+7. Systém musí být schopen detekovat a zabránit transakcím, které by vedly k zápornému zůstatku na účtu.
+
+## Nefunkční požadavky
+1. Systém musí být rychlý a spolehlivý.
+2. Uživatelské rozhraní musí být intuitivní a snadno použitelné.
+3. Systém musí být dostupný z jakéhokoliv zařízení s přístupem na internet.
+4. Systém musí být bezpečný a chráněný proti útokům.
+5. Systém musí být škálovatelný pro možnost přidání dalších funkcionalit.
+6. Systém musí být navržen tak, aby byl snadno udržovatelný a rozšiřitelný.
+7. Systém musí být implementován v souladu s nejlepšími praktikami pro vývoj softwaru.
+
+#  Use cases (scénáře použití)
+
+###  UML diagram
 
 ![UML částka](/UML%20castka.png)
 
 ### 4.2. Registrace uživatele
-1. Uživatel vyplní registrační formulář s údaji
-2. Uživatel potvrdí formulář
-3. Uživatel je upozorněn na úspěšnou registraci případně upozorněn na chybu a je vyzvák k opravě
-4. Uživatel je přesměrován na přihlašovací stránku
+1. Uživatel otevře stránku s registračním formulářem.
+2. Uživatel vyplní formulář s požadovanými údaji
+3. Uživatel potvrdí odeslání formuláře.
+4. Systém zkontroluje správnost vyplněných údajů, například platnost emailové adresy nebo shodu hesel.
+5. Pokud jsou údaje vyplněny správně, uživatel je upozorněn na úspěšnou registraci a instruován k přihlášení.
+6. Pokud jsou údaje vyplněny nesprávně, uživatel je upozorněn na chybu a vyzván k jejímu opravení.
+7. Po úspěšné registraci je uživatel přesměrován na přihlašovací stránku.
    
-### 4.3. Přihlášení uživatele
-1. Uživatel vyplní příhlašovací údaje
-2. Uživatel potvrdí přihlášení
-3. Uživatel je upozorněn na úspěšné přihlášení případně upozorněn na chybu a je vyzván k opravě
-4. Uživatel je přesměrován na stránku s účtem
-   
-### 4.4. Práce s účtem
+###  Přihlášení uživatele
+1. Uživatel otevře přihlašovací stránku.
+2. Uživatel vyplní přihlašovací údaje, jako jsou emailová adresa a heslo.
+3. Uživatel potvrdí odeslání přihlašovacích údajů.
+4. Systém zkontroluje správnost přihlašovacích údajů.
+5. Pokud jsou přihlašovací údaje správné, uživatel je přihlášen do systému a přesměrován na stránku s účtem.
+6. pokud jsou přihlašovací údaje nesprávné, uživatel je upozorněn na chybu a vyzván k opravě.
+
+###  Práce s účtem
 | Požadavek číslo | Popis požadavku                                                   |
 | --------------- | ----------------------------------------------------------------- |
 | 1               | Vložení peněžních prostředků na účet v zadané měně                |
@@ -108,15 +147,20 @@ DSP - dokument specifikace požadavků, v něm je požadován návrh systému, k
 | 5               | Platba u obchodníka                                               |
 | 6               | Přehled účtu                                                      |
 
-### 4.5. Odhlášení uživatele
+### Odhlášení uživatele
 1. Uživatel potvrdí odhlášení
 2. uživatel je odhlášen
 3. uživatel je upozorněn na úspěšné odhlášení
 4. uživatel je přesměrován na přihlašovací stránku
 
-## 5. Designová a implementační omezení
+##  Designová a implementační omezení
+1. Bezpečnost: Bezpečnost bankovní aplikace je zásadní. Budou implementování bezpečnostní opatření jako šifrování dat, dvoustupňové ověření identity uživatele, omezení přístupu ke kritickým datům a zabezpečení aplikace proti útokům typu SQL Injection, Cross-site scripting (XSS) a dalších. Kromě toho je důležité také udržovat v bezpečnosti uživatelské údaje jako hesla (neukládat jako čistý text) => použít bezpečné hashovací algoritmy.
 
-## 6. Závislosti
+2. Uživatelské rozhraní: Uživatelské rozhraní je klíčové pro použitelnost aplikace. Musí být navrženo tak, aby bylo intuitivní, snadno použitelné a efektivní. Musí být také esteticky příjemné a responzivní, aby fungovalo dobře na různých zařízeních a obrazovkách.
+
+3. Výkon : rychlost aplikace závisí vzhledem k nasazení na serveru (Render) vzhledem k tomu že bude použit pouze základní program zdarma, je nutné počítat s omezením počtu zpracování pořažadavků, velikosti databáza nebo rychlosti nasazení na serveru.
+
+##  Závislosti
 - API od ČNB na získání jednotlivých kurzů v podobě, která fungvala k 17.4.2022 na https://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.txt (ukázka jaký formát je v souboru)
 
 			18.04.2023 #75
@@ -153,5 +197,14 @@ DSP - dokument specifikace požadavků, v něm je požadován návrh systému, k
 		USA|dolar|1|USD|21,312
 		Velká Británie|libra|1|GBP|26,524
 
-- Poskytovatelé služeb GitHub, Render
-- 
+- Poskytovatelé služeb GitHub, Render 
+
+## Testování
+- Minimální pokrytí testy bude 80%.
+- Testování bude probíhat pomocí jednotkových testů, které budou vytvořeny pomocí knihovny pytest. Testování bude probíhat na CI serveru GitHub Actions. Testování bude probíhat při každém pushu do hlavní větve a při každém pull requestu. Tím bude zajistěno, aplikace bude nasazena pouze za předpokladu splnění těchto testů.
+
+##  Nasazení
+- Aplikace bude nasazena na server Render. Render je server, který umožňuje nasazovat aplikace pomocí Dockeru. 
+
+
+@KNajman 21.4.2023
