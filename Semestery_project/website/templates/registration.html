@@ -1,48 +1,53 @@
 {% extends "base.html" %} {% block title %}Registration{% endblock %} {% block
     content %}
     <form method="POST">
-      <h3 align="center">Sign Up</h3>
+      <h3 align="center">Registrace</h3>
+
       <div class="form-group">
-        <label for="email">Email Address</label>
+        <label for="name">Jméno</label>
+        <input
+          type="text"
+          class="form-control"
+          id="name"
+          name="name"
+          placeholder="Zadejte jméno"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
         <input
           type="email"
           class="form-control"
           id="email"
           name="email"
-          placeholder="Enter email"
+          placeholder="Zadejte email"
         />
       </div>
+
+      
       <div class="form-group">
-        <label for="firstName">First Name</label>
-        <input
-          type="text"
-          class="form-control"
-          id="firstName"
-          name="firstName"
-          placeholder="Enter first name"
-        />
-      </div>
-      <div class="form-group">
-        <label for="password1">Password</label>
+        <label for="pin">PIN</label>
         <input
           type="password"
           class="form-control"
-          id="password1"
-          name="password1"
-          placeholder="Enter password"
+          id="pin"
+          name="pin"
+          placeholder="Zadejte PIN"
         />
       </div>
+      
       <div class="form-group">
-        <label for="password2">Password (Confirm)</label>
+        <label for="pin-again">PIN (Confirm)</label>
         <input
           type="password"
           class="form-control"
-          id="password2"
-          name="password2"
-          placeholder="Confirm password"
+          id="pin-again"
+          name="pin-again"
+          placeholder="Zadejte PIN znovu"
         />
       </div>
       <br />
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <button type="submit" class="btn btn-primary">Registrovat</button>
     </form>
     {% endblock %}

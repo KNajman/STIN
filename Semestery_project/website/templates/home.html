@@ -1,21 +1,29 @@
-{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
-    %}
-    <h1 align="center">Notes</h1>
-    <ul class="list-group list-group-flush" id="notes">
-      {% for note in user.notes %}
-      <li class="list-group-item">
-        {{ note.data }}
-        <button type="button" class="close" onClick="deleteNote({{ note.id }})">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </li>
-      {% endfor %}
-    </ul>
-    <form method="POST">
-      <textarea name="note" id="note" class="form-control"></textarea>
-      <br />
-      <div align="center">
-        <button type="submit" class="btn btn-primary">Add Note</button>
-      </div>
-    </form>
-    {% endblock %}
+{% extends "base.html" %} {% block title %}Malá banka{% endblock %} {% block content %}
+<div class="jumbotron">
+  <h1 class="display-4">Vaše prostředky v Malé bance</h1>
+  <p class="lead"J edno místo pro všechny vaše bankovní potřeby </p>
+  <p>Prosím, vyberte možnost níže pro zahájení:</p>
+  <div class="row">
+    <div class="col-md-6">
+      <a href="/withdraw" class="btn btn-primary btn-lg btn-block mb-3">
+        <i class="fa fa-money"></i> Výběr hotovosti
+      </a>
+    </div>
+    <div class="col-md-6">
+      <a href="/transfer" class="btn btn-primary btn-lg btn-block mb-3">
+        <i class="fa fa-exchange"></i> Převod
+      </a>
+    </div>
+    <div class="col-md-6">
+      <a href="/payment" class="btn btn-primary btn-lg btn-block mb-3">
+        <i class="fa fa-credit-card"></i> Platba
+      </a>
+    </div>
+    <div class="col-md-6">
+      <a href="/balance" class="btn btn-primary btn-lg btn-block mb-3">
+        <i class="fa fa-balance-scale"></i> Zůstatek
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}
