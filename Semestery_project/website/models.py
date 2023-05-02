@@ -42,14 +42,6 @@ class Account(db.Model):
         db.session.commit()
         return self.balance
 
-    def withdraw(self, amount):
-        if self.balance < amount:
-            return "Insufficient funds"
-        else:
-            self.balance -= amount
-            db.session.commit()
-            return self.balance
-
     def transfer(self, amount, recipient_account):
         if self.balance < amount:
             return "Insufficient funds"
@@ -64,11 +56,11 @@ class Account(db.Model):
 
     def pay_bills(self, amount):
         if self.balance < amount:
-            return "Insufficient funds"
+            return False
         else:
             self.balance -= amount
             db.session.commit()
-            return self.balance
+            return True
 
 # generate random account number for new account (8 digits) starting with 123
 def generate_account_number():

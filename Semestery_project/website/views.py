@@ -2,10 +2,24 @@ from flask import Blueprint, render_template, request, flash, jsonify
 from flask_login import login_required, current_user
 from .models import Account, User
 from . import db
-import json
-import functions
+from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for
 
-views = Blueprint('views', __name__)
+import functions as my_functions
+
+views = Blueprint("views", __name__)
+
+supported_currencies = [
+    "USD",
+    "EUR",
+    "GBP",
+    "CHF",
+    "JPY",
+    "CAD",
+    "AUD",
+    "NZD",
+    "RUB",
+    "CNY",
+]
 
 
 # Home page
@@ -14,52 +28,72 @@ views = Blueprint('views', __name__)
 def home():
     return render_template("home.html", user=current_user)
 
-# User account page
-@views.route("/account", methods=["GET"])
-@login_required
-def account():
-    user_accounts = Account.query.filter_by(user_id=current_user.id).all()
-    return render_template("account.html", user=current_user, accounts=user_accounts)
 
-# Add new account page
-@views.route("/add_account", methods=["GET", "POST"])
-@login_required
-def add_account():
+# Deposit page + possibility to deposit money in different currencies
+@app.route("/deposit", methods=["GET", "POST"])
+def deposit():
     if request.method == "POST":
-        account_type = request.form.get("account_type")
-        balance = request.form.get("balance")
-        if account_type and balance:
-            new_account = Account(account_type=account_type, balance=balance, user_id=current_user.id)
-            db.session.add(new_account)
-            db.session.commit()
-            flash("Nový účet byl vytvořen!", category="success")
-            return redirect(url_for("views.account"))
-        else:
-            flash("Něco je špatně, zkontrolujte, zda jste vyplnili všechna pole.", category="error")
-    return render_template("add_account.html", user=current_user)
-
-# Transfer money page
-@views.route("/transfer", methods=["GET", "POST"])
-@login_required
-def transfer():
-    user_accounts = Account.query.filter_by(user_id=current_user.id).all()
-    if request.method == "POST":
-        from_account = request.form.get("from_account")
-        to_account = request.form.get("to_account")
         amount = request.form.get("amount")
-        if from_account and to_account and amount:
-            from_account = Account.query.filter_by(id=from_account).first()
-            to_account = Account.query.filter_by(id=to_account).first()
-            if from_account and to_account and from_account.balance >= amount:
-                from_account.balance -= amount
-                to_account.balance += amount
-                new_transaction = Transaction(amount=amount, from_account=from_account.id, to_account=to_account.id)
-                db.session.add(new_transaction)
-                db.session.commit()
-                flash("Převod byl úspěšně proveden!", category="success")
-                return redirect(url_for("views.account"))
-            else:
-                flash("Něco je špatně, zkontrolujte, zda jste vyplnili všechna pole a zda máte dostatek prostředků na účtu.", category="error")
+        currency = request.form.get("currency")
+        if amount == "":
+            flash("Please enter a valid amount", category="error")
         else:
-            flash("Něco je špatně, zkontrolujte, zda jste vyplnili všechna pole.", category="error")
-    return render_template("transfer.html", user=current_user, accounts=user_accounts)
+            amount = float(amount)
+            if amount <= 0:
+                flash("Please enter a valid amount", category="error")
+            else:
+                # Check if the currency is supported by the bank
+
+                if currency not in supported_currencies:
+                    flash("The selected currency is not supported", category="error")
+                else:
+                    # Check if the bank account is associated with the user
+                    if current_user.account is None:
+                        flash("You don't have a bank account", category="error")
+                    else:
+                        # Deposit the money
+                        current_user.deposit(amount, currency)
+                        flash("Deposit successful", category="success")
+    return render_template("deposit.html", user=current_user)
+
+
+# Payment page + possibility to pay in different currencies
+@views.route("/payment", methods=["GET", "POST"])
+@login_required
+def payment():
+    if request.method == "POST":
+        amount = request.form.get("amount")
+        currency = request.form.get("currency")
+        if not amount:
+            flash("Please enter a valid amount", category="error")
+        else:
+            try:
+                amount = float(amount)
+            except ValueError:
+                flash("Please enter a valid amount", category="error")
+            else:
+                if amount <= 0:
+                    flash("Please enter a valid amount", category="error")
+                else:
+                    # Check if the currency is supported by the bank
+                    if currency not in supported_currencies:
+                        flash(
+                            "The selected currency is not supported", category="error"
+                        )
+                    else:
+                        # Check if the bank account is associated with the user
+                        if current_user.account is None:
+                            flash("You don't have a bank account", category="error")
+                        else:
+                            # Pay the bill
+                            success = current_user.pay_bills(amount, currency)
+                    if success:
+                        flash("Payment successful", category="success")
+                    else:
+                        flash(
+                            "Payment failed. Please check your account balance and try again.",
+                            category="error",
+                        )
+    return render_template(
+        "payment.html", user=current_user, supported_currencies=supported_currencies
+    )
