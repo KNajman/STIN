@@ -226,40 +226,42 @@ Celková náročnost : 21-26 hodin
 ##  Závislosti
 - API od ČNB na získání jednotlivých kurzů v podobě, která fungvala k 17.4.2022 na https://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.txt
   -  (ukázka jaký formát je v souboru)
-
-			18.04.2023 #75
-		země|měna|množství|kód|kurz
-		Austrálie|dolar|1|AUD|14,364
-		Brazílie|real|1|BRL|4,330
-		Bulharsko|lev|1|BGN|11,952
-		Čína|žen-min-pi|1|CNY|3,101
-		Dánsko|koruna|1|DKK|3,137
-		EMU|euro|1|EUR|23,375
-		Filipíny|peso|100|PHP|37,885
-		Hongkong|dolar|1|HKD|2,715
-		Indie|rupie|100|INR|25,984
-		Indonesie|rupie|1000|IDR|1,436
-		Island|koruna|100|ISK|15,615
-		Izrael|nový šekel|1|ILS|5,855
-		Japonsko|jen|100|JPY|15,915
-		Jižní Afrika|rand|1|ZAR|1,173
-		Kanada|dolar|1|CAD|15,929
-		Korejská republika|won|100|KRW|1,618
-		Maďarsko|forint|100|HUF|6,290
-		Malajsie|ringgit|1|MYR|4,806
-		Mexiko|peso|1|MXN|1,186
-		MMF|ZPČ|1|XDR|28,757
-		Norsko|koruna|1|NOK|2,039
-		Nový Zéland|dolar|1|NZD|13,255
-		Polsko|zlotý|1|PLN|5,062
-		Rumunsko|leu|1|RON|4,735
-		Singapur|dolar|1|SGD|15,998
-		Švédsko|koruna|1|SEK|2,069
-		Švýcarsko|frank|1|CHF|23,770
-		Thajsko|baht|100|THB|62,158
-		Turecko|lira|1|TRY|1,099
-		USA|dolar|1|USD|21,312
-		Velká Británie|libra|1|GBP|26,524
+  
+	```.txt
+	18.04.2023 #75
+	země|měna|množství|kód|kurz
+	Austrálie|dolar|1|AUD|14,364
+	Brazílie|real|1|BRL|4,330
+	Bulharsko|lev|1|BGN|11,952
+	Čína|žen-min-pi|1|CNY|3,101
+	Dánsko|koruna|1|DKK|3,137
+	EMU|euro|1|EUR|23,375
+	Filipíny|peso|100|PHP|37,885
+	Hongkong|dolar|1|HKD|2,715
+	Indie|rupie|100|INR|25,984
+	Indonesie|rupie|1000|IDR|1,436
+	Island|koruna|100|ISK|15,615
+	Izrael|nový šekel|1|ILS|5,855
+	Japonsko|jen|100|JPY|15,915
+	Jižní Afrika|rand|1|ZAR|1,173
+	Kanada|dolar|1|CAD|15,929
+	Korejská republika|won|100|KRW|1,618
+	Maďarsko|forint|100|HUF|6,290
+	Malajsie|ringgit|1|MYR|4,806
+	Mexiko|peso|1|MXN|1,186
+	MMF|ZPČ|1|XDR|28,757
+	Norsko|koruna|1|NOK|2,039
+	Nový Zéland|dolar|1|NZD|13,255
+	Polsko|zlotý|1|PLN|5,062
+	Rumunsko|leu|1|RON|4,735
+	Singapur|dolar|1|SGD|15,998
+	Švédsko|koruna|1|SEK|2,069
+	Švýcarsko|frank|1|CHF|23,770
+	Thajsko|baht|100|THB|62,158
+	Turecko|lira|1|TRY|1,099
+	USA|dolar|1|USD|21,312
+	Velká Británie|libra|1|GBP|26,524
+	```
 
 - emailová služba pro odesílání email SendGrid (https://sendgrid.com/docs/for-developers/sending-email/api-getting-started/)
   - nutná registace
