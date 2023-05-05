@@ -118,7 +118,7 @@ Entita Transaction bude reprezentovat bankovní transakci a bude obsahovat násl
 
 ###  UML diagram
 
-![UML částka](/UML%20castka.png)
+![UML částka](./UML_castka.png)
 
 ### 4.2. Registrace uživatele
 1. Uživatel otevře stránku s registračním formulářem.
