@@ -106,19 +106,64 @@ Entita Transaction bude reprezentovat bankovní transakci a bude obsahovat násl
 7. Systém musí být schopen detekovat a zabránit transakcím, které by vedly k zápornému zůstatku na účtu.
 
 ## Nefunkční požadavky
-1. Systém musí být rychlý a spolehlivý.
+1. Rychlost a dostupnost
+   - odezva systému musí být od 1 do 3 sekund po odeslání požadavku
+   - systém musí být dostupný 24/7 
+   - systém musí být schopen obslouži alespoň 5 uživatelů současně.
+   - systém musí být schopen obsloužit alespoň 100 uživatelů za den.
+  
 2. Uživatelské rozhraní musí být intuitivní a snadno použitelné.
-3. Systém musí být dostupný z jakéhokoliv zařízení s přístupem na internet.
+   - velikost fontu musí být alespoň 16px
+   - barvy musí být kontrastní
+   - tlačítka musí být dostatečně velká alespoň velikosti 1 palce, 
+  
+3. Systém musí být dostupný z libovolného zařízení s prohlížečem.
+   - škálovatelnost na různé velikosti obrazovky
+  
 4. Systém musí být bezpečný a chráněný proti útokům.
+   - pro přístup do systému musí být vyžadováno přihlášení a dvoufázové ověření pomocí emailu (autentizace)
+   - všechny příchozí požadavky musí být validovány
+   - všechny vstupy musí být validovány a ošetřeny alespoň vůči proti SQL injections
+   - hesla musí být ukládána v šifrované podobě (hash + salt) werkzeug.security
+   - dvoufázové ověření kodu pomocí emailu, taktéř šifrováno
+   - šifrování komunikace pomocí HTTPS
+   - všechny operace musí být prováděny v transakcích
+  
 5. Systém musí být škálovatelný pro možnost přidání dalších funkcionalit.
+   - systém musí být navržen tak, aby bylo možné přidat další měny
+   - systém musí být navržen tak, aby bylo možné přidat další typy účtů
+   - systém musí být navržen tak, aby bylo možné přidat další typy transakcí
+   - systém musí být navržen tak, aby bylo možné přidat další typy uživatelů (např. firemní účty, účty pro děti, admin účty)
+  
 6. Systém musí být navržen tak, aby byl snadno udržovatelný a rozšiřitelný.
-7. Systém musí být implementován v souladu s nejlepšími praktikami pro vývoj softwaru.
+   - kód musí být rozdělen do logických modulů
+   - kód musí být dobře čitelný a dokumentovaný pomocí docstringů
+   - kód musí být pokrytý testy (alespoň 80%)
+   - kód musí být verzován pomocí Git, pro každou novou funkčnost musí být vytvořena nová větev, která bude následně mergována do mainu pomocí pull requestu
+
+
+### Omezení aplikace službou Render při použití verze zdarma:
+- 0.1 CPU, zvlášní výpočetní výkon (nejsou bližžší infomarce) který je přidělen kontejneru, znamená omezenou rychlost zpracování požadavků
+- maximální velikost kontejneru je 1 GB
+- Data jsou ukládána do paměti, při restartu kontejneru se ztrácí
+- Kontejner se vypne po 30 minutách nečinnosti
+- Data v databázi jsou ukládána pouze po dobu  90 dní
+- Webová aplikace musí být dostupná na portu 8080 ostatní porty jsou blokovány
+- Zdrojový kód musí být veřejně dostupný na GitHubu
+- Omezená škálovatelnost počtu aktivní uživatelů používající službu je omezena na 10
+- build aplikace musí být dokončen do 10 minut jinak je přerušen maximální doba biuldu měsičně nesmí překročit 500 minut
+- zpomalená odezva služby vůči uživateli, při použití verze zdarma (není uvedeno o kolik)
+
+### Omezení aplikace službou SendGrid při použití verze zdarma:
+- maximální počet odeslaných emailů je 300 denně
+- uživatel který přijímá email musí být uložen v adresáři
+- maximální velikost emailu je 15 MB
 
 #  Use cases (scénáře použití)
 
 ###  UML diagram
 
-![UML částka](./UML_castka.png)
+![UML částka](UMLcastka.png)
 
 ### 4.2. Registrace uživatele
 1. Uživatel otevře stránku s registračním formulářem.
@@ -131,20 +176,21 @@ Entita Transaction bude reprezentovat bankovní transakci a bude obsahovat násl
    
 ###  Přihlášení uživatele
 1. Uživatel otevře přihlašovací stránku.
-2. Uživatel vyplní přihlašovací údaje, jako jsou emailová adresa a heslo.
+2. Uživatel vyplní přihlašovací údaje, jako jsou přihlašovací jméno a heslo.
 3. Uživatel potvrdí odeslání přihlašovacích údajů.
 4. Systém zkontroluje správnost přihlašovacích údajů.
-5. Pokud jsou přihlašovací údaje správné, uživatel je přihlášen do systému a přesměrován na stránku s účtem.
-6. pokud jsou přihlašovací údaje nesprávné, uživatel je upozorněn na chybu a vyzván k opravě.
+   1. Pokud jsou přihlašovací údaje správné, uživateli je emailem odeslán 6 místný ověřovací kód a je přesměrován na stránku s ověřovacím formulářem.
+   2. Jinak je uživatel upozorněn na chybu v zadaných údajích a vyzván k jejich opravení (nebude specifikováno, zda se jedná o chybné přihlašovací jméno nebo heslo, aby se zabránilo útokům na heslo)
+5. Uživatel vyplní ověřovací kód, který mu přišel na email a zadá ho do formuláře. Pokud se jedná o správný kód, uživatel je přihlášen a přesměrován na hlavní stránku. Jinak je uživatel upozorněn na chybný kód a vyzván k jeho opravení, v případě že uplyne 5 minut od odeslání kódu, je uživatel přesměrován na přihlašovací stránku.
+   
 
 ###  Práce s účtem
 | Požadavek číslo | Popis požadavku                                                   |
 | --------------- | ----------------------------------------------------------------- |
 | 1               | Vložení peněžních prostředků na účet v zadané měně                |
-| 2               | Vybrání peněžních prostředků z účtu v zadané měně                 |
+| 2               | Platba/Výběr peněžních prostředků z účtu v zadané měně            |
 | 3               | Převod peněžních prostředků na jiný účet s možností konverze měny |
 | 4               | Konverze měny                                                     |
-| 5               | Platba u obchodníka                                               |
 | 6               | Přehled účtu                                                      |
 
 ### Odhlášení uživatele
@@ -160,8 +206,26 @@ Entita Transaction bude reprezentovat bankovní transakci a bude obsahovat násl
 
 3. Výkon : rychlost aplikace závisí vzhledem k nasazení na serveru (Render) vzhledem k tomu že bude použit pouze základní program zdarma, je nutné počítat s omezením počtu zpracování pořažadavků, velikosti databáza nebo rychlosti nasazení na serveru.
 
+---
+## Odhadovaná časová náročnost
+| Část aplikace | Popis                                                          | Odhadovaná časová náročnost |
+| ------------- | -------------------------------------------------------------- | --------------------------- |
+| 1             | Návrh databáze a její implementace                             | 2 hodiny                    |
+| 2             | Tvorka uživatelského rozhraní, šablon a stylizace, šablonizace | 2 hodiny                    |
+| 3             | Implementace API pro získání kurzů měn a konverzi měn          | 1 hodina                    |
+| 4             | Iimplementace API pro odesílání emailové komunikace            | 1-2 hodiny                  |
+| 5             | Tvorba funcionalit (transakce, přihlášení, registrace)         | 4 hodiny                    |
+| 6             | Propojení výše uvedených částí do funkčního celku              | 5-6 hodin                   |
+| 7             | Testování a ladění                                             | 4-7 hodin                   |
+| 8             | Nasazení                                                       | 2 hodiny                    |
+
+Celková náročnost : 21-26 hodin
+
+---
+
 ##  Závislosti
-- API od ČNB na získání jednotlivých kurzů v podobě, která fungvala k 17.4.2022 na https://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.txt (ukázka jaký formát je v souboru)
+- API od ČNB na získání jednotlivých kurzů v podobě, která fungvala k 17.4.2022 na https://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.txt
+  -  (ukázka jaký formát je v souboru)
 
 			18.04.2023 #75
 		země|měna|množství|kód|kurz
@@ -197,14 +261,18 @@ Entita Transaction bude reprezentovat bankovní transakci a bude obsahovat násl
 		USA|dolar|1|USD|21,312
 		Velká Británie|libra|1|GBP|26,524
 
+- emailová služba pro odesílání email SendGrid (https://sendgrid.com/docs/for-developers/sending-email/api-getting-started/)
+  - nutná registace
+  - maximálně 300 emailů za den
+  - bezpečné uložení API klíče
+
 - Poskytovatelé služeb GitHub, Render 
 
 ## Testování
 - Minimální pokrytí testy bude 80%.
-- Testování bude probíhat pomocí jednotkových testů, které budou vytvořeny pomocí knihovny pytest. Testování bude probíhat na CI serveru GitHub Actions. Testování bude probíhat při každém pushu do hlavní větve a při každém pull requestu. Tím bude zajistěno, aplikace bude nasazena pouze za předpokladu splnění těchto testů.
+- Testování bude probíhat pomocí jednotkových testů, které budou vytvořeny pomocí knihovny **pytest**. Testování bude probíhat na CI serveru **GitHub Actions**. Testování bude probíhat při každém pushu do hlavní větve a při každém pull requestu. Tím bude zajistěno, aplikace bude nasazena pouze za předpokladu splnění těchto testů.
 
 ##  Nasazení
-- Aplikace bude nasazena na server Render. Render je server, který umožňuje nasazovat aplikace pomocí Dockeru. 
-
+- Aplikace bude nasazena na server Render, přes GitHub Actions. Nasazení bude probíhat při každém pushu do hlavní větve po úspěšném projití testů. Tím bude zajistěn CI/CD proces.
 
 @KNajman 21.4.2023
